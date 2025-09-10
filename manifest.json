@@ -1,0 +1,121 @@
+{
+  "name": "Food Ninja",
+  "short_name": "FoodNinja",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "background_color": "#FFE9D2",
+  "theme_color": "#FFE1C4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/img/icons/icon-72x72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/img/icons/icon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/img/icons/icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/img/icons/icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/img/icons/icon-152x152.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    },
+    {
+      "src": "/img/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/icons/icon-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "/img/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "description": "Order your favorite food quickly and easily with Food Ninja!",
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/320x320.png?text=Food+Ninja",
+      "sizes": "320x320",
+      "type": "image/png",
+      "label": "Food Ninja main screen",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "https://via.placeholder.com/1280x720.png?text=Food+Ninja+Desktop",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Food Ninja desktop screenshot",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Order Food",
+      "short_name": "Order",
+      "description": "Go to the order page",
+      "url": "/index.html",
+      "icons": [
+        {
+          "src": "/img/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Contact Food Ninja support",
+      "url": "/pages/contact.html",
+      "icons": [
+        {
+          "src": "/img/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+foodninja",
+      "url": "/index.html?order=%s"
+    }
+  ],
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9",
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.foodninja.app",
+      "min_version": "1.0.0"
+    },
+    {
+      "platform": "itunes",
+      "id": "123456789",
+      "min_version": "1.0.0"
+    },
+    {
+      "platform": "windows",
+      "id": "9NBLGGH4R315",
+      "min_version": "1.0.0"
+    }
+  ]
+}
