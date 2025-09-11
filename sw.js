@@ -1,3 +1,6 @@
+'use strict';
+
+// [1] - Define cache name and assets to cache
 const staticCacheName = 'pwa-v1';
 const assets = [
   // Root and HTML files
@@ -5,14 +8,16 @@ const assets = [
   '/index.html',
   '/pages/about.html',
   '/pages/contact.html',
-  // CSS and JS files
-  '/css/styles.css',
+  // CSS files
   '/css/materialize.min.css',
+  '/css/styles.css',
+	// JS files
   '/js/materialize.min.js',
   '/js/ui.js',
   '/js/app.js',
   // google fonts
   'https://fonts.googleapis.com/icon?family=Material+Icons',
+	'https://fonts.gstatic.com/s/materialicons/v144/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
   // Images
   '/img/dish.png',
   '/img/screenshot-wide.svg',
@@ -48,4 +53,10 @@ self.addEventListener('activate', (event) => {
 });
 
 // [4] - Fetch event
-self.addEventListener('fetch', (event) => {});
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});
