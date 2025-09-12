@@ -62,7 +62,6 @@ self.addEventListener('activate', (event) => {
           })
       );
     })
-
   );
 });
 
@@ -107,7 +106,13 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       } catch (error) {
         // On network failure, return a simple fallback response
-        return caches.match('/pages/fallback.html');
+        if (event.request.url.indexOf('.html') > -1) {
+          return caches.match('/pages/fallback.html');
+        }
+        // could add image fallback here if desired
+        if (event.request.destination === 'image') {
+          return caches.match('/img/fallback.png');
+        }
       }
     })()
   );
