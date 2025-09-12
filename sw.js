@@ -1,13 +1,12 @@
 'use strict';
 
 // [1] - Define cache name and assets to cache
-const staticCacheName = 'pwa-v1';
+const staticCache = 'pwa-static-v1';
+const dynamicCache = 'pwa-dynamic-v1';
 const assets = [
   // Root and HTML files
   '/',
   '/index.html',
-  '/pages/about.html',
-  '/pages/contact.html',
   // CSS files
   '/css/materialize.min.css',
   '/css/styles.css',
@@ -37,7 +36,7 @@ self.addEventListener('install', (event) => {
   // console.log(`Service worker installed at ${new Date().toLocaleTimeString()}`);
   event.waitUntil(
     caches
-      .open(staticCacheName)
+      .open(staticCache)
       .then((cache) => {
         console.log(`Caching assets during install: ${assets.length} items`);
         cache.addAll(assets);
@@ -55,7 +54,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((cache) => cache !== staticCacheName)
+          .filter((cache) => cache !== staticCache)
           .map((cache) => {
             console.log(`Deleting old cache: ${cache}`);
             return caches.delete(cache);
@@ -67,9 +66,50 @@ self.addEventListener('activate', (event) => {
 
 // [4] - Fetch event
 self.addEventListener('fetch', (event) => {
+  // console.log('fetch event', event);
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    (async () => {
+      // Only handle GET requests in the service worker caching flow
+      if (event.request.method !== 'GET') {
+        return fetch(event.request);
+      }
+
+      // Return cached response if available
+      const cachedResponse = await caches.match(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      // Avoid trying to cache unsupported or non-http(s) schemes (e.g., chrome-extension:, data:)
+      let urlProtocol = '';
+      try {
+        urlProtocol = new URL(event.request.url).protocol;
+      } catch (err) {
+        // If URL parsing fails, just perform a network fetch
+        return fetch(event.request);
+      }
+      if (urlProtocol !== 'http:' && urlProtocol !== 'https:') {
+        return fetch(event.request);
+      }
+
+      try {
+        const networkResponse = await fetch(event.request);
+
+        // Only cache successful responses (status 200)
+        if (networkResponse && networkResponse.status === 200) {
+          const cache = await caches.open(dynamicCache);
+          // Use the Request object rather than the raw URL string
+          cache.put(event.request, networkResponse.clone());
+        }
+
+        return networkResponse;
+      } catch (error) {
+        // On network failure, return a simple fallback response
+        return new Response('Network error', {
+          status: 408,
+          statusText: 'Network request failed',
+        });
+      }
+    })()
   );
 });
