@@ -7,6 +7,7 @@ const assets = [
   // Root and HTML files
   '/',
   '/index.html',
+  '/pages/fallback.html',
   // CSS files
   '/css/materialize.min.css',
   '/css/styles.css',
@@ -54,13 +55,14 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((cache) => cache !== staticCache)
+          .filter((cache) => cache !== staticCache && cache !== dynamicCache)
           .map((cache) => {
             console.log(`Deleting old cache: ${cache}`);
             return caches.delete(cache);
           })
       );
     })
+
   );
 });
 
@@ -105,10 +107,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       } catch (error) {
         // On network failure, return a simple fallback response
-        return new Response('Network error', {
-          status: 408,
-          statusText: 'Network request failed',
-        });
+        return caches.match('/pages/fallback.html');
       }
     })()
   );
