@@ -11,13 +11,14 @@ const assets = [
   // CSS files
   '/css/materialize.min.css',
   '/css/styles.css',
-	// JS files
+  // JS files
   '/js/materialize.min.js',
   '/js/ui.js',
   '/js/app.js',
   // google fonts
   'https://fonts.googleapis.com/icon?family=Material+Icons',
-	'https://fonts.gstatic.com/s/materialicons/v144/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
+  'https://fonts.gstatic.com/s/materialicons/v144/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
+  'https://fonts.gstatic.com/s/materialicons/v144/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2',
   // Images
   '/img/dish.png',
   '/img/screenshot-wide.svg',
@@ -49,7 +50,19 @@ self.addEventListener('install', (event) => {
 
 // [3] - Activate service worker
 self.addEventListener('activate', (event) => {
-  console.log(`Service worker activated at ${new Date().toLocaleTimeString()}`);
+  // console.log(`Service worker activated at ${new Date().toLocaleTimeString()}`);
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((cache) => cache !== staticCacheName)
+          .map((cache) => {
+            console.log(`Deleting old cache: ${cache}`);
+            return caches.delete(cache);
+          })
+      );
+    })
+  );
 });
 
 // [4] - Fetch event
