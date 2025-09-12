@@ -32,6 +32,27 @@ const assets = [
   '/img/icons/icon-512x512.png',
 ];
 
+/** CACHE LIMITING FUNCTION
+ * The function `limitCacheSize` deletes the oldest cached items in a specified cache if the number of
+ * items exceeds a given limit.
+ * @param cacheName - The `cacheName` parameter is a string that represents the name of the cache where
+ * items are stored.
+ * @param maxItems - The `maxItems` parameter specifies the maximum number of items allowed in the
+ * cache before the oldest items are deleted to make room for new ones.
+ */
+const limitCacheSize = (cacheName, maxItems) => {
+  caches.open(cacheName).then((cache) => {
+    cache.keys().then((keys) => {
+      if (keys.length > maxItems) {
+        // Delete the oldest cached items
+        cache.delete(keys[0]).then(() => {
+          limitCacheSize(cacheName, maxItems);
+        });
+      }
+    });
+  });
+};
+
 // [2] - Install service worker
 self.addEventListener('install', (event) => {
   // console.log(`Service worker installed at ${new Date().toLocaleTimeString()}`);
@@ -102,6 +123,8 @@ self.addEventListener('fetch', (event) => {
           // Use the Request object rather than the raw URL string
           cache.put(event.request, networkResponse.clone());
         }
+        // Limit cache size
+        limitCacheSize(dynamicCache, 15);
 
         return networkResponse;
       } catch (error) {
