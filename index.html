@@ -45,7 +45,7 @@
 
     <!-- recipes -->
     <div class="recipes container grey-text text-darken-1">
-      <div class="card-panel recipe white row">
+      <!-- <div class="card-panel recipe white row">
         <img src="/img/dish.png" alt="recipe thumb" />
         <div class="recipe-details">
           <div class="recipe-title">Edame Noodles</div>
@@ -54,37 +54,7 @@
         <div class="recipe-delete">
           <i class="material-icons">delete_outline</i>
         </div>
-      </div>
-      <div class="card-panel recipe white row">
-        <img src="/img/dish.png" alt="recipe thumb" />
-        <div class="recipe-details">
-          <div class="recipe-title">Edame Noodles</div>
-          <div class="recipe-ingredients">Edame Beans, Noodels, Garlic oil</div>
-        </div>
-        <div class="recipe-delete">
-          <i class="material-icons">delete_outline</i>
-        </div>
-      </div>
-      <div class="card-panel recipe white row">
-        <img src="/img/dish.png" alt="recipe thumb" />
-        <div class="recipe-details">
-          <div class="recipe-title">Edame Noodles</div>
-          <div class="recipe-ingredients">Edame Beans, Noodels, Garlic oil</div>
-        </div>
-        <div class="recipe-delete">
-          <i class="material-icons">delete_outline</i>
-        </div>
-      </div>
-      <div class="card-panel recipe white row">
-        <img src="/img/dish.png" alt="recipe thumb" />
-        <div class="recipe-details">
-          <div class="recipe-title">Edame Noodles</div>
-          <div class="recipe-ingredients">Edame Beans, Noodels, Garlic oil</div>
-        </div>
-        <div class="recipe-delete">
-          <i class="material-icons">delete_outline</i>
-        </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="center">
@@ -121,9 +91,29 @@
         </div>
       </form>
     </div>
+    <!-- firebase -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
 
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: 'AIzaSyCtjw6oJsa1Im2G8NFEn0M1HpAY8lJq78g',
+        authDomain: 'food-ninja-pwa-5c98a.firebaseapp.com',
+        projectId: 'food-ninja-pwa-5c98a',
+        storageBucket: 'food-ninja-pwa-5c98a.firebasestorage.app',
+        messagingSenderId: '669700574876',
+        appId: '1:669700574876:web:4af7e7b52716a099a1e759',
+        measurementId: 'G-S26L4ENSTD',
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+    </script>
     <script type="text/javascript" src="/js/materialize.min.js"></script>
     <script src="/js/app.js"></script>
+    <script type="module" src="/js/db.js"></script>
     <script src="/js/ui.js"></script>
   </body>
 </html>
