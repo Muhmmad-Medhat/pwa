@@ -17,6 +17,40 @@ db.collection('recipes').onSnapshot((snapshot) => {
     }
     if (change.type === 'removed') {
       // remove the document data from the web page
+      deleteRecipe(change.doc.id);
     }
   });
 });
+
+// add new recipe
+const form = document.querySelector('form');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const recipe = {
+    title: form.title.value,
+    ingredients: form.ingredients.value,
+  };
+  db.collection('recipes')
+    .add(recipe)
+    .catch((err) => {
+      console.log(err);
+    });
+  form.title.value = '';
+  form.ingredients.value = '';
+});
+
+// delete recipe using event delegation
+const recipeContainer = document.querySelector('.recipes');
+recipeContainer.addEventListener('click', (event) => {
+  console.log(`🚀 ~ event =>`, event);
+  if (event.target.parentElement.classList.contains('recipe-delete')) {
+    const id = event.target.parentElement.getAttribute('data-id');
+    db.collection('recipes')
+      .doc(id)
+      .delete()
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
+

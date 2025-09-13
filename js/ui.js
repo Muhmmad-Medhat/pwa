@@ -36,5 +36,13 @@ const renderRecipe = (recipe, id) => {
   recipesContainer.innerHTML += recipeEl;
 };
 
+const deleteRecipe = (id) => {
+  const recipeEl = document.querySelector(`.recipe[data-id='${id}']`);
+  if (recipeEl) {
+    recipeEl.remove();
+  }
+};
+
 // Expose renderRecipe to the global window so other non-module scripts can call it
 window.renderRecipe = renderRecipe;
+window.deleteRecipe = deleteRecipe;
