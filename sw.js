@@ -87,56 +87,29 @@ self.addEventListener('activate', (event) => {
 });
 
 // [4] - Fetch event
-self.addEventListener('fetch', (event) => {
-  // console.log('fetch event', event);
-  // event.respondWith(
-  //   (async () => {
-  //     // Only handle GET requests in the service worker caching flow
-  //     if (event.request.method !== 'GET') {
-  //       return fetch(event.request);
-  //     }
-
-  //     // Return cached response if available
-  //     const cachedResponse = await caches.match(event.request);
-  //     if (cachedResponse) {
-  //       return cachedResponse;
-  //     }
-
-  //     // Avoid trying to cache unsupported or non-http(s) schemes (e.g., chrome-extension:, data:)
-  //     let urlProtocol = '';
-  //     try {
-  //       urlProtocol = new URL(event.request.url).protocol;
-  //     } catch (err) {
-  //       // If URL parsing fails, just perform a network fetch
-  //       return fetch(event.request);
-  //     }
-  //     if (urlProtocol !== 'http:' && urlProtocol !== 'https:') {
-  //       return fetch(event.request);
-  //     }
-
-  //     try {
-  //       const networkResponse = await fetch(event.request);
-
-  //       // Only cache successful responses (status 200)
-  //       if (networkResponse && networkResponse.status === 200) {
-  //         const cache = await caches.open(dynamicCache);
-  //         // Use the Request object rather than the raw URL string
-  //         cache.put(event.request, networkResponse.clone());
-  //       }
-  //       // Limit cache size
-  //       limitCacheSize(dynamicCache, 15);
-
-  //       return networkResponse;
-  //     } catch (error) {
-  //       // On network failure, return a simple fallback response
-  //       if (event.request.url.indexOf('.html') > -1) {
-  //         return caches.match('/pages/fallback.html');
-  //       }
-  //       // could add image fallback here if desired
-  //       if (event.request.destination === 'image') {
-  //         return caches.match('/img/fallback.png');
-  //       }
-  //     }
-  //   })()
-  // );
+self.addEventListener('fetch', (evt) => {
+  if (evt.request.url.indexOf('firestore.googleapis.com') === -1) {
+    evt.respondWith(
+      caches
+        .match(evt.request)
+        .then((cacheRes) => {
+          return (
+            cacheRes ||
+            fetch(evt.request).then((fetchRes) => {
+              return caches.open(dynamicCache).then((cache) => {
+                cache.put(evt.request.url, fetchRes.clone());
+                // check cached items size
+                limitCacheSize(dynamicCache, 15);
+                return fetchRes;
+              });
+            })
+          );
+        })
+        .catch(() => {
+          if (evt.request.url.indexOf('.html') > -1) {
+            return caches.match('/pages/fallback.html');
+          }
+        })
+    );
+  }
 });

@@ -36,4 +36,5 @@ const renderRecipe = (recipe, id) => {
   recipesContainer.innerHTML += recipeEl;
 };
 
-export { renderRecipe };
+// Expose renderRecipe to the global window so other non-module scripts can call it
+window.renderRecipe = renderRecipe;

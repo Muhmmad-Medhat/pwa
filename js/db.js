@@ -1,28 +1,22 @@
-import {
-  collection,
-  onSnapshot,
-  getFirestore,
-} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js';
-import { renderRecipe } from './ui.js';
-
-const db = getFirestore();
-
-const recipesRef = collection(db, 'recipes');
-onSnapshot(
-  recipesRef,
-  (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        // console.log('New recipe added: ', change.doc.data());
-        renderRecipe(change.doc.data(), change.doc.id);
-      } else if (change.type === 'modified') {
-        // console.log('Recipe modified: ', change.doc.data());
-      } else if (change.type === 'removed') {
-        // console.log('Recipe removed: ', change.doc.data());
-      }
-    });
-  },
-  (err) => {
-    console.error('Error listening to recipes collection:', err);
+// enable offline data
+db.enablePersistence().catch(function (err) {
+  if (err.code == 'failed-precondition') {
+    // probably multible tabs open at once
+    console.log('persistance failed');
+  } else if (err.code == 'unimplemented') {
+    // lack of browser support for the feature
+    console.log('persistance not available');
   }
-);
+});
+
+// real-time listener
+db.collection('recipes').onSnapshot((snapshot) => {
+  snapshot.docChanges().forEach((change) => {
+    if (change.type === 'added') {
+      renderRecipe(change.doc.data(), change.doc.id);
+    }
+    if (change.type === 'removed') {
+      // remove the document data from the web page
+    }
+  });
+});
